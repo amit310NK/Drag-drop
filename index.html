@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drag&Drop</title>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        margin-top: 200px;
+        width: 75%;
+        background-color: rgb(2, 2, 2);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 400px;
+        height: 300px;
+        border: 2px solid rgb(171, 175, 112);
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 10px;
+      }
+
+      .box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        justify-content: space-evenly;
+      }
+
+      .item {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 5px;
+        cursor: move;
+        border-radius: 10px;
+      }
+
+      .item:hover {
+        background-color: #e0e0e0;
+      }
+
+      .success-message {
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: center;
+        height: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .reset-button {
+        width: 10%;
+        height: 30px;
+        border: 1px solid rgb(145, 164, 88);
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+
+      .reset-button:hover {
+        background-color: rgb(91, 154, 146);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: ease-in-out 200ms;
+      }
+
+      /* Responsive Styles */
+      @media screen and (max-width: 768px) {
+        .main {
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .box {
+          flex-direction: column;
+          /* background-color: yellow; */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="box">
+        <div class="container" id="container1">
+          <div class="item" draggable="true">Item 1</div>
+          <div class="item" draggable="true">Item 2</div>
+          <div class="item" draggable="true">Item 3</div>
+          <div class="item" draggable="true">Item 4</div>
+          <div class="item" draggable="true">Item 5</div>
+          <div class="item" draggable="true">Item 6</div>
+        </div>
+        <div class="container" id="container2"></div>
+      </div>
+
+      <div class="success-message" id="successMessage"></div>
+      <div class="btn">
+        <button class="reset-button" onclick="resetContainers()">Reset</button>
+      </div>
+    </div>
+
+    <script>
+      const items = document.querySelectorAll(".item");
+      const container2 = document.getElementById("container2");
+      const successMessage = document.getElementById("successMessage");
+
+      let draggedItem = null;
+
+      for (const item of items) {
+        item.addEventListener("dragstart", dragStart);
+        item.addEventListener("dragend", dragEnd);
+      }
+
+      container2.addEventListener("dragover", dragOver);
+      container2.addEventListener("dragenter", dragEnter);
+      container2.addEventListener("dragleave", dragLeave);
+      container2.addEventListener("drop", drop);
+
+      function dragStart(event) {
+        draggedItem = event.target;
+        setTimeout(() => {
+          draggedItem.style.display = "none";
+        }, 0);
+      }
+
+      function dragEnd() {
+        setTimeout(() => {
+          draggedItem.style.display = "block";
+          draggedItem = null;
+        }, 0);
+      }
+
+      function dragOver(event) {
+        event.preventDefault();
+      }
+
+      function dragEnter(event) {
+        event.preventDefault();
+        container2.classList.add("hovered");
+      }
+
+      function dragLeave() {
+        container2.classList.remove("hovered");
+      }
+
+      function drop() {
+        container2.classList.remove("hovered");
+        container2.appendChild(draggedItem);
+        successMessage.textContent = "Item dropped successfully!";
+        setTimeout(() => {
+          successMessage.textContent = "";
+        }, 1000);
+      }
+
+      function resetContainers() {
+        container2.innerHTML = "";
+        successMessage.textContent = "";
+        for (const item of items) {
+          container1.appendChild(item);
+          item.style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>
